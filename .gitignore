@@ -1,6 +1,5 @@
 *.d
 *.o
-makefile
 *.hex
 *.out
 *.out.map
