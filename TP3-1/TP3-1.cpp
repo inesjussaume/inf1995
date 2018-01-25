@@ -10,7 +10,7 @@ TP3 Mathieu Marchand et Ines Jussaume
 #include <avr/io.h>
 #include <util/delay.h>
 
-//#define F_CPU = 16000000
+#define F_CPU = 8000000
 
 const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b00000001;
@@ -53,17 +53,18 @@ enTrainPeser = false;
 	}
 
 if(etat ==5){
-PINA = ROUGE;
+PORTA = ROUGE;
 _delay_ms(1000);
-PINA = ROUGE;
+PORTA = ROUGE;
 _delay_ms(1000);
 etat=0;
+PORTA = ETEINT;
 }
 
 }
 return 0;
 }
-//
+
 
 bool antiRebond(){
       if(PIND & (1 << 2)){//si le bouton est active

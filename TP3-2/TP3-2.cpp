@@ -4,10 +4,12 @@ TP3 probleme 2
 
 #include <avr/io.h>
 #include <util/delay.h>
+
+#define F_CPU = 8000000;
 ///
 
 const uint8_t ETEINT = 0b00000000;
-const uint8_t VERT = 0b00000001;
+const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
 
 enum Etat{
@@ -21,7 +23,6 @@ enum Etat{
 
 bool antiRebond();
 void etatSuivant(Etat &etatActuel);
-//void switchEtat(Etat &etatActuel);
 
 int main(){
 	DDRA = 0xff; //PORT A est en sortie
@@ -35,13 +36,9 @@ int main(){
 while(true){
 
 	if(etat == PESE_AMBRE){
-	PINA = ETEINT;
-	PINA = ROUGE;
+	PORTA = ROUGE;
 	_delay_ms(100);
-	PINA = VERT;
-	_delay_ms(100);
-	PINA = PINA;
-
+	PORTA = VERT;
 	_delay_ms(100);
 	}
 		
@@ -67,23 +64,23 @@ void etatSuivant(Etat &etatActuel){
 			break;
 		case PESE_AMBRE:
 			etatActuel = RELACHE_VERT;
-			PINA = VERT;
+			PORTA = VERT;
 			break;
 		case RELACHE_VERT:
 			etatActuel = PESE_ROUGE;
-			PINA = ROUGE;
+			PORTA = ROUGE;
 			break;
 		case PESE_ROUGE:
 			etatActuel = RELACHE_ETEINT;
-		       	PINA = PINA;//pour eteindre (point d'interrogation
+		    PORTA = ETEINT;//pour eteindre (point d'interrogation
 			break;
 		case RELACHE_ETEINT:
-		       etatActuel = PESE_VERT;
-		       PINA = VERT;
+		     etatActuel = PESE_VERT;
+		     PORTA = VERT;
 		       break;
 		case PESE_VERT:
 			etatActuel = RELACHE_DEPART_ROUGE;
-			PINA=ROUGE;
+			PORTA=ROUGE;
 	
 	}
 
@@ -91,7 +88,7 @@ void etatSuivant(Etat &etatActuel){
 
 
 bool antiRebond(){
-      if(PIND & (1 << 2)){//si le bouton est active
+if(PIND & _BV(2)){//si le bouton est active
       _delay_ms(10);
       if(PIND & (1 << 2)){//si le bouton est toujours /////active apres 1 sec
          return true;
