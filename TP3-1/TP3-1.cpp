@@ -12,6 +12,10 @@ TP3 Mathieu Marchand et Ines Jussaume
 
 //#define F_CPU = 16000000
 
+const uint8_t ETEINT = 0b00000000;
+const uint8_t VERT = 0b00000001;
+const uint8_t ROUGE = 0b00000010;
+
 enum Etat{
     ETATETEINT,
     ETAT1,
@@ -25,25 +29,41 @@ enum Etat{
 
 bool antiRebond();
 
+
 int main (){
-	
-  DDRA = 0xff; // PORT A est en mode sortie
-  DDRB = 0xff; // PORT B est en mode sortie
-  DDRC = 0xff; // PORT C est en mode sortie
-  DDRD = 0x00; // PORT D est en mode entree
-  bool allumer = false;
+	DDRA = 0xff; // PORT A est en mode sortie
+	DDRB = 0xff; // PORT B est en mode sortie
+	DDRC = 0xff; // PORT C est en mode sortie
+	DDRD = 0x00; // PORT D est en mode entree
+	uint8_t etat = 0;
+	bool enTrainPeser = false;
+
   while(true){
-    if(!allumer){
-      allumer = antiRebond();
-    }else {//si allumer
-      PINA = 1;//0000001   
-      _delay_ms(100);
-      PINA = 2;
-  }
-      
+
+
+  if(antiRebond() && !enTrainPeser){
+	enTrainPeser = true;
+	etat++;
+	}
+
+if(!antiRebond()){//relache le bouton
+enTrainPeser = false;
+
+	
+	}
+
+if(etat ==5){
+PINA = ROUGE;
+_delay_ms(1000);
+PINA = ROUGE;
+_delay_ms(1000);
+etat=0;
+}
+
 }
 return 0;
 }
+//
 
 bool antiRebond(){
       if(PIND & (1 << 2)){//si le bouton est active
