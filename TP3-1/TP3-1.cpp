@@ -3,17 +3,16 @@ TP3 Mathieu Marchand et Ines Jussaume
 */
 
 /*Table a etat :
- * 
+ *
  * 
  * */
-
 
 #include <avr/io.h>
 #include <util/delay.h>
 
 //#define F_CPU = 16000000
 
-public enum Etat{
+enum Etat{
     ETATETEINT,
     ETAT1,
     ETAT2,
@@ -21,12 +20,13 @@ public enum Etat{
     ETAT4,
     ETAT5,
     ETATALLUMER
-}
-
-typedef  
+};
+ 
 
 bool antiRebond();
+
 int main (){
+	
   DDRA = 0xff; // PORT A est en mode sortie
   DDRB = 0xff; // PORT B est en mode sortie
   DDRC = 0xff; // PORT C est en mode sortie
@@ -36,8 +36,7 @@ int main (){
     if(!allumer){
       allumer = antiRebond();
     }else {//si allumer
-      PINA = 1;//0000001 
-      //0000010
+      PINA = 1;//0000001   
       _delay_ms(100);
       PINA = 2;
   }
