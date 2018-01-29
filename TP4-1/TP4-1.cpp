@@ -34,7 +34,11 @@ int main(){
 		
 return 0;
 }
-
+/********************************************************************************
+ *  delay()
+ *  la fonction prend en charge la gestion des delais et prend en paramètre un int
+ *  qui sera utilisé pour la longueur du délais voulu
+ ********************************************************************************/
 void delay(int delay){
 	for (int i = 0; i < delay; i++)
 	{
@@ -42,4 +46,4 @@ void delay(int delay){
 	}
 	
 	
-	}
+}
