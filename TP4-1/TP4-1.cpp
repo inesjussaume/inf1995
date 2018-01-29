@@ -16,15 +16,20 @@ void delay(int delay);
 
 int main(){
 	
+	int period_us = 1000*2;
 	DDRA = 0xff; //PORT A est en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
 	PORTA = ROUGE;
-	int a = 1000, b = 0;
-	while(true){
-		b+=10;
-		a-=10;	
+	int a = period_us, b = 0;
+
+	
+
+	while(a >= 0){
+	
+		a-=1;
+		b = period_us - a;	
 		PORTA = ROUGE;	
 		delay(a);
 		PORTA = ETEINT;
@@ -36,9 +41,9 @@ return 0;
 }
 
 void delay(int delay){
-	for (int i = 0; i < delay; i++)
+	while(delay-- >=0)
 	{
-		_delay_ms(1);
+		_delay_us(1);
 	}
 	
 	
