@@ -1,10 +1,20 @@
 /*
-TP3 Mathieu Marchand et Ines Jussaume
+TP3 Mathieu Marchand 1894847 et Ines Jussaume 1900361
 */
 
 /*Table a etat :
- *
- * 
+ 
+ ÉTAT PRÉSENT              ->     ENTRÉE          ->        ÉTAT SUIVANT
+ 
+ ÉTAT_ÉTEINT               ->     appuyer         ->        ÉTAT1
+ ÉTAT1                     ->     appuyer         ->        ÉTAT2
+ ÉTAT2                     ->     appuyer         ->        ÉTAT3
+ ÉTAT3                     ->     appuyer         ->        ÉTAT4
+ ÉTAT4                     ->     appuyer         ->        ETATALLUMER
+ ETATALLUMER               ->     délais 1s       ->        ÉTAT_ÉTEINT
+ 
+ si l'entrée diffère de celle qui figure dans la table, l'état demeure à l'état actuel sauf pour ETATALLUMER qui allumera toujours la DEL pour une seconde
+ 
  * */
 
 #include <avr/io.h>
@@ -16,15 +26,6 @@ const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b00000001;
 const uint8_t ROUGE = 0b00000010;
 
-enum Etat{
-    ETATETEINT,
-    ETAT1,
-    ETAT2,
-    ETAT3,
-    ETAT4,
-    ETAT5,
-    ETATALLUMER
-};
  
 
 bool antiRebond();
