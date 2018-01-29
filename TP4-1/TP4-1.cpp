@@ -49,6 +49,4 @@ void delay_us(int nb_us){
 	{
 		_delay_us(1);
 	}
-	
-	
 }
