@@ -44,8 +44,8 @@ return 0;
  *  la fonction prend en charge la gestion des delais et prend en paramètre un int
  *  qui sera utilisé pour la longueur du délais voulu
  ********************************************************************************/
-void delay_us(int delay){
-	while(delay-- >=0)
+void delay_us(int nb_us){
+	while(nb_us-- >=0)
 	{
 		_delay_us(1);
 	}
