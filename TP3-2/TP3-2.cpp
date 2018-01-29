@@ -1,5 +1,18 @@
 /*
 TP3 probleme 2
+AUTEURS: Ines Jussaume 1900361 & Mathieu Marchand 1894847
+ 
+ Machine à état:
+ 
+ ÉTAT PRÉSENT              ->     ENTRÉE          ->        ÉTAT SUIVANT
+ 
+ RELACHE_DEPART_ROUGE      ->     appuyer         ->        PESE_AMBRE
+ PESE_AMBRE                ->     relâcher        ->        RELACHE_VERT
+ RELACHE_VERT              ->     appuyer         ->        PESE_ROUGE
+ PESE_ROUGE                ->     relâcher        ->        RELACHE_ETEINT
+ RELACHE_ETEINT            ->     appuyer         ->        PESE_VERT
+ PESE_VERT                 ->     relâcher        ->        RELACHE_DEPART_ROUGE
+ 
 */
 
 #include <avr/io.h>
