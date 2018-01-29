@@ -25,7 +25,7 @@ const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
 
-enum Etat{
+enum Etat{ //énumétation de tous les états de la machine à état
 	RELACHE_DEPART_ROUGE,
 	PESE_AMBRE,
 	RELACHE_VERT,
@@ -46,30 +46,35 @@ int main(){
 	Etat etat = RELACHE_DEPART_ROUGE;
 	PINA = ROUGE ;
 	
-while(true){
+    while(true){
 
-	if(etat == PESE_AMBRE){
-	PORTA = ROUGE;
-	_delay_ms(100);
-	PORTA = VERT;
-	_delay_ms(100);
-	}
+        if(etat == PESE_AMBRE){
+            PORTA = ROUGE;
+            _delay_ms(100);
+            PORTA = VERT;
+            _delay_ms(100);
+        }
 		
-	if(antiRebond() && !enTrainPeser){
-	enTrainPeser = true;
-	etatSuivant(etat);
-	}
+        if(antiRebond() && !enTrainPeser){
+            enTrainPeser = true;
+            etatSuivant(etat);
+        }
 
-	if(!antiRebond() && enTrainPeser){
-	enTrainPeser = false;
-	etatSuivant(etat);	
-	}
+        if(!antiRebond() && enTrainPeser){
+            enTrainPeser = false;
+            etatSuivant(etat);
+        }
 		
+    }
+
+    return 0;
 }
 
-return 0;
-}
-
+/********************************************************************************
+ *  etatSuivant() prend en prarmètre l'état actuel et le modifie pour l'état suivant
+ *  le switch détermine quel sera l'état suivant selon l'état actuel et allume ou étaint
+ *  la del d'une certaine couleur
+ ********************************************************************************/
 void etatSuivant(Etat &etatActuel){
 	switch(etatActuel){
 		case RELACHE_DEPART_ROUGE:
@@ -85,7 +90,7 @@ void etatSuivant(Etat &etatActuel){
 			break;
 		case PESE_ROUGE:
 			etatActuel = RELACHE_ETEINT;
-		    PORTA = ETEINT;//pour eteindre (point d'interrogation
+		    PORTA = ETEINT;
 			break;
 		case RELACHE_ETEINT:
 		     etatActuel = PESE_VERT;
@@ -99,13 +104,17 @@ void etatSuivant(Etat &etatActuel){
 
 }
 
-
+/********************************************************************************
+ *  antiRebond()
+ *  la fonction valide si le bouton a bel et bien été pesé en vérifiant une première
+ *  fois, puis une seconde fois après 10ms pour s'assurer que le push n'est appelé
+ *  qu'une seule fois
+ ********************************************************************************/
 bool antiRebond(){
-if(PIND & _BV(2)){//si le bouton est active
-      _delay_ms(10);
-      if(PIND & (1 << 2)){//si le bouton est toujours /////active apres 1 sec
+    if(PIND & _BV(2))//si le bouton est active
+        _delay_ms(10);
+    if(PIND & (1 << 2))//si le bouton est toujours /////active apres 1 sec
          return true;
-      }
-    }
+
     return false;
 }
