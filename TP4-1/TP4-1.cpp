@@ -12,7 +12,7 @@ const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
 
-void delay(int delay);
+void delay_us(int delay);
 
 int main(){
 	
@@ -31,9 +31,9 @@ int main(){
 		a-=1;
 		b = period_us - a;	
 		PORTA = ROUGE;	
-		delay(a);
+		delay_us(a);
 		PORTA = ETEINT;
-		delay(b);			
+		delay_us(b);			
 	}
 	
 		
@@ -44,7 +44,7 @@ return 0;
  *  la fonction prend en charge la gestion des delais et prend en paramètre un int
  *  qui sera utilisé pour la longueur du délais voulu
  ********************************************************************************/
-void delay(int delay){
+void delay_us(int delay){
 	while(delay-- >=0)
 	{
 		_delay_us(1);
