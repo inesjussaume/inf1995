@@ -6,19 +6,19 @@
 ///
 
 const uint8_t ETEINT = 0b00000000;
-const uint8_t VERT = 0b000000001;
-const uint8_t ROUGE = 0b00000010;
+const uint8_t AVANCE = 0b00000101;
+const uint8_t RECULE = 0b00001010;
 
 void delay_us(int delay);
 
 int main(){
 	
-	int period_us = 1000;
+	int period_us = 10*100;
 	DDRA = 0xff; //PORT A est en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
-	PORTA = ROUGE;
+	PORTB = AVANCE;
 	int a = period_us, b = 0;
 
 	
@@ -27,9 +27,9 @@ int main(){
 	
 		a-=1;
 		b = period_us - a;	
-		PORTA = ROUGE;	
+		PORTB = AVANCE;	
 		delay_us(a);
-		PORTA = ETEINT;
+		PORTB = ETEINT;
 		delay_us(b);			
 	}
 	
