@@ -12,8 +12,9 @@ const uint8_t RECULE = 0b00001010;
 void delay_us(int delay);
 
 int main(){
-	
-	int period_us = 10*100;
+	// période = inverse de la fréquence? donc si fréquence 1 = 60s^-1, période = 16 667us et fréquence 2 = 400Hz, période 2 = 2500us
+	int period_us = 16667;
+    int period_us2 = 2500;
 	DDRA = 0xff; //PORT A est en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
