@@ -16,11 +16,11 @@ TP3 Mathieu Marchand 1894847 et Ines Jussaume 1900361
  si l'entrée diffère de celle qui figure dans la table, l'état demeure à l'état actuel sauf pour ETATALLUMER qui allumera toujours la DEL pour une seconde
  
  * */
-
+#define F_CPU (8000000)
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define F_CPU = 8000000
+
 
 const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b00000001;

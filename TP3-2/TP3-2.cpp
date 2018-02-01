@@ -14,11 +14,11 @@ AUTEURS: Ines Jussaume 1900361 & Mathieu Marchand 1894847
  PESE_VERT                 ->     relâcher        ->        RELACHE_DEPART_ROUGE
  
 */
-
+#define F_CPU (8000000)
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define F_CPU = 8000000;
+
 ///
 
 const uint8_t ETEINT = 0b00000000;
