@@ -50,9 +50,10 @@ int main(){
 
         if(etat == PESE_AMBRE){
             PORTA = ROUGE;
-            _delay_ms(100);
+            _delay_ms(1);
             PORTA = VERT;
-            _delay_ms(100);
+            _delay_ms(1);
+            PORTA=ETEINT;
         }
 		
         if(antiRebond() && !enTrainPeser){

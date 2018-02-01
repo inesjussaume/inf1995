@@ -38,6 +38,7 @@ int main (){
 	DDRD = 0x00; // PORT D est en mode entree
 	uint8_t etat = 0;
 	bool enTrainPeser = false;
+	
 
   while(true){
 
@@ -53,9 +54,7 @@ int main (){
 
       if(etat ==5){ //lorsque le compteur de push etat arrive à 5, la DEL est allumée puis éteinte après 1sec
           PORTA = ROUGE;
-          _delay_ms(1000);
-          PORTA = ROUGE;
-          _delay_ms(1000);
+          _delay_ms(100);
           etat=0;
           PORTA = ETEINT;
       }
