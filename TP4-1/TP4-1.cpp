@@ -2,10 +2,12 @@
  *
  *  
 */
+
+#define F_CPU (8000000)
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define F_CPU = 8000000;
+
 ///
 
 const uint8_t ETEINT = 0b00000000;
@@ -16,7 +18,7 @@ void delay_us(int delay);
 
 int main(){
 	
-	int period_us = 1000*2;
+	int period_us = 1000;
 	DDRA = 0xff; //PORT A est en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
