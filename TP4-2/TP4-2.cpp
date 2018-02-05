@@ -3,38 +3,59 @@
 #include <util/delay.h>
 
 
-///
 
 const uint8_t ETEINT = 0b00000000;
 const uint8_t AVANCE = 0b00000101;
 const uint8_t RECULE = 0b00001010;
 
 void delay_us(int delay);
+void nextStep();
 
+int a = 0;
+int b = 0;
+
+const double rapport0 = 0.0;
+const double rapport25 = 0.25;
+const double rapport50 = 0.50;
+const double rapport75 = 0.75;
+const double rapport100 = 1.00;
+
+enum Etat {
+	rapport_0,
+	rapport_25,
+	rapport_50,
+	rapport_75,
+	rapport_100
+	};
+	
+Etat step = rapport_0;
+
+	int period_us60Hz = 16667;
+    int period_us400Hz = 2500;
+    
+ bool isDone = false;   
 int main(){
 	// période = inverse de la fréquence? donc si fréquence 1 = 60s^-1, période = 16 667us et fréquence 2 = 400Hz, période 2 = 2500us
-	int period_us = 16667;
-    int period_us2 = 2500;
-	DDRA = 0xff; //PORT A est en sortie
+	DDRA = 0xff; //PORT A en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
 	PORTB = AVANCE;
-	int a = period_us, b = 0;
-
+	int temps = 70;
 	
-
-	while(a >= 0){
-	
-		a-=1;
-		b = period_us - a;	
-		PORTB = AVANCE;	
-		delay_us(a);
-		PORTB = ETEINT;
-		delay_us(b);			
+	while(!isDone){
+		if(temps > 0){
+			temps--;
+			PORTB = AVANCE;	
+			delay_us(a);
+			PORTB = ETEINT;
+			delay_us(b-a);
+		}else{
+				nextStep();
+				temps =70;
+			}			
 	}
 	
-		
 return 0;
 }
 /********************************************************************************
@@ -48,3 +69,34 @@ void delay_us(int nb_us){
 		_delay_us(1);
 	}
 } 
+
+void nextStep(){
+		switch(step){
+			case rapport_0:
+				step = rapport_25;
+				a = rapport25 * period_us60Hz;
+				b = period_us60Hz;
+				break;
+			case rapport_25:
+				step = rapport_50;
+				a = rapport50 * period_us60Hz;
+				b = period_us60Hz;
+				break;
+			case rapport_50:
+				step = rapport_75;
+				a = rapport75 * period_us60Hz;
+				b = period_us60Hz;
+				break;
+			case rapport_75:
+				step = rapport_100;
+				a = rapport100 * period_us60Hz;
+				b = period_us60Hz;
+				break;
+			case rapport_100:
+			isDone =true;
+				step = rapport_100;
+				a = rapport100 * period_us60Hz;
+				b = period_us60Hz;
+				break;
+			}
+	}
