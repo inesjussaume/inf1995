@@ -25,7 +25,12 @@ enum Etat {
 	rapport_25,
 	rapport_50,
 	rapport_75,
-	rapport_100
+	rapport_100,
+	rapport_0_2,
+	rapport_25_2,
+	rapport_50_2,
+	rapport_75_2,
+	rapport_100_2
 	};
 	
 Etat step = rapport_0;
@@ -42,7 +47,7 @@ int main(){
 	DDRD = 0x00; //PORT D en entree
 	PORTB = AVANCE;
 	int temps = 70;
-	
+	PORTA = AVANCE;
 	while(!isDone){
 		if(temps > 0){
 			temps--;
@@ -51,8 +56,8 @@ int main(){
 			PORTB = ETEINT;
 			delay_us(b-a);
 		}else{
-				nextStep();
-				temps =70;
+			nextStep();
+			temps =70;
 			}			
 	}
 	
@@ -76,27 +81,51 @@ void nextStep(){
 				step = rapport_25;
 				a = rapport25 * period_us60Hz;
 				b = period_us60Hz;
-				break;
+				//break;
 			case rapport_25:
 				step = rapport_50;
 				a = rapport50 * period_us60Hz;
 				b = period_us60Hz;
-				break;
+				//break;
 			case rapport_50:
 				step = rapport_75;
 				a = rapport75 * period_us60Hz;
 				b = period_us60Hz;
-				break;
+				//break;
 			case rapport_75:
 				step = rapport_100;
 				a = rapport100 * period_us60Hz;
 				b = period_us60Hz;
-				break;
+				//break;
 			case rapport_100:
-			isDone =true;
-				step = rapport_100;
-				a = rapport100 * period_us60Hz;
-				b = period_us60Hz;
+				PORTA = RECULE;
+				step = rapport_0_2;
+				a = rapport100 * period_us400Hz;
+				b = period_us400Hz;
+				//break;
+			case rapport_0_2:
+				step = rapport_25_2;
+				a = rapport25 * period_us400Hz;
+				b = period_us400Hz;
+				break;
+			case rapport_25_2:
+				step = rapport_50_2;
+				a = rapport50 * period_us400Hz;
+				b = period_us400Hz;
+				break;
+			case rapport_50_2:
+				step = rapport_75_2;
+				a = rapport75 * period_us400Hz;
+				b = period_us400Hz;
+				break;
+			case rapport_75_2:
+				step = rapport_100_2;
+				a = rapport100 * period_us400Hz;
+				b = period_us400Hz;	
+				break;
+			case rapport_100_2:
+				PORTA = ETEINT;
+				isDone =true;
 				break;
 			}
 	}
