@@ -35,10 +35,13 @@ ISR(INT0_vect) {
 	//_delay_ms(30);
 	if(estClique()){
 		enTrainPeser = true;
+		etatSuivant();
 		//PORTA = ROUGE;
 		//PORTA = VERT;
 		//etatSuivant();
 		}
+		
+	
 	
 	//PORTA = ROUGE;
 	// se souvenir ici si le cf récédente
@@ -54,6 +57,12 @@ int main(){
 	initialisation();
 	
     while(true){
+		
+	
+		if(!estClique() && enTrainPeser){
+			enTrainPeser = false;
+			etatSuivant();
+			} 
 
         if(etat == PESE_AMBRE){
             PORTA = ROUGE;
@@ -107,9 +116,7 @@ void initialisation() {
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
-
 	EIMSK |= (1 << INT0); //INT0 = interuption 0
-
 	EICRA |= (1<< ISC00); //external interupt control register A -- s'occupe des interruptions
 
 	sei(); //peut reprendre les interuptions ici
