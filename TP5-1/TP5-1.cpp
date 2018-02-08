@@ -12,9 +12,6 @@ const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
 
-volatile Etat etat = RELACHE_DEPART_ROUGE;
-
-volatile bool enTrainPeser = false;
 
 enum Etat{ //énumétation de tous les états de la machine à état
 	RELACHE_DEPART_ROUGE,
@@ -25,37 +22,36 @@ enum Etat{ //énumétation de tous les états de la machine à état
 	PESE_VERT
 };
 
-void etatSuivant(Etat &etatActuel);
+void etatSuivant();
 void initialisation();
+bool estClique();
 
+volatile Etat etat = RELACHE_DEPART_ROUGE;
+volatile bool enTrainPeser = false;
 
-ISR('modifier ici') {
+ISR(INT0_vect) {
 	// laisser un delai avant de confirmer la réponse du
 	// bouton-poussoir: environ 30 ms (anti-rebond)
-	_delay_loop_ms(30);
-	// se souvenir ici si le bouton est pressé ou relâché
-	'modifier ici'
-		if (enTrainPeser) {
-			
+	//_delay_ms(30);
+	if(estClique()){
+		enTrainPeser = true;
+		//PORTA = ROUGE;
+		//PORTA = VERT;
+		//etatSuivant();
 		}
-		else
-		{
-			enTrainPeser = false;
-		}
-		
-		// changements d'états tels que ceux de la
-		// semaine précédente
-		'modifier ici'
-		// Voir la note plus bas pour comprendre cette instruction et son rôle
-		EIFR |= (1 << INTF0);
-
+	
+	//PORTA = ROUGE;
+	// se souvenir ici si le cf récédente
+	//'modifier ici'
+	// Voir la note plus bas pour comprendre cette instruction et son rôle
+	EIFR |= (1 << INTF0);
+	
 }
 
 
-
 int main(){
+	
 	initialisation();
-	PINA = ROUGE ;
 	
     while(true){
 
@@ -76,47 +72,57 @@ int main(){
  *  le switch détermine quel sera l'état suivant selon l'état actuel et allume ou étaint
  *  la del d'une certaine couleur
  ********************************************************************************/
-void etatSuivant(Etat &etatActuel){
-	switch(etatActuel){
+void etatSuivant(){
+	switch(etat){
 		case RELACHE_DEPART_ROUGE:
-			etatActuel = PESE_AMBRE;
+			etat = PESE_AMBRE;
 			break;
 		case PESE_AMBRE:
-			etatActuel = RELACHE_VERT;
+			etat = RELACHE_VERT;
 			PORTA = VERT;
 			break;
 		case RELACHE_VERT:
-			etatActuel = PESE_ROUGE;
+			etat = PESE_ROUGE;
 			PORTA = ROUGE;
 			break;
 		case PESE_ROUGE:
-			etatActuel = RELACHE_ETEINT;
+			etat = RELACHE_ETEINT;
 		    PORTA = ETEINT;
 			break;
 		case RELACHE_ETEINT:
-		     etatActuel = PESE_VERT;
+		     etat = PESE_VERT;
 		     PORTA = VERT;
 		       break;
 		case PESE_VERT:
-			etatActuel = RELACHE_DEPART_ROUGE;
+			etat = RELACHE_DEPART_ROUGE;
 			PORTA=ROUGE;
-	
 	}
 
 }
 
 void initialisation() {
-	cli();
-
+	cli(); //pas d'interuption
+	PORTA = ROUGE;
 	DDRA = 0xff; //PORT A est en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
 
-	EIMSK |= (1 << INT0);
+	EIMSK |= (1 << INT0); //INT0 = interuption 0
 
-	EICRA |= 'modifier ici';
+	EICRA |= (1<< ISC00); //external interupt control register A -- s'occupe des interruptions
 
-	sei();
+	sei(); //peut reprendre les interuptions ici
 }
+
+bool estClique(){
+	if(PIND & (1<<2)){
+		_delay_ms(10);
+		}
+	if(PIND & (1<<2)){
+		return true;
+		}	
+		
+	return false;
+	}
 
