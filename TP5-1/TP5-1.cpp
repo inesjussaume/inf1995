@@ -34,7 +34,7 @@ ISR(INT0_vect) {
 	// bouton-poussoir: environ 30 ms (anti-rebond)
 	//_delay_ms(30);
 	if(estClique()){
-		enTrainPeser = true;
+		//enTrainPeser = true;
 		etatSuivant();
 		//PORTA = ROUGE;
 		//PORTA = VERT;
@@ -59,10 +59,10 @@ int main(){
     while(true){
 		
 	
-		if(!estClique() && enTrainPeser){
-			enTrainPeser = false;
-			etatSuivant();
-			} 
+		//if(!estClique() && enTrainPeser){
+			//enTrainPeser = false;
+			//etatSuivant();
+			//} 
 
         if(etat == PESE_AMBRE){
             PORTA = ROUGE;
@@ -117,7 +117,7 @@ void initialisation() {
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
 	EIMSK |= (1 << INT0); //INT0 = interuption 0
-	EICRA |= (1<< ISC00); //external interupt control register A -- s'occupe des interruptions
+	EICRA |= (1<< ISC01); //external interupt control register A -- s'occupe des interruptions
 
 	sei(); //peut reprendre les interuptions ici
 }
