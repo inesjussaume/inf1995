@@ -11,7 +11,7 @@ AUTEURS: Ines Jussaume 1900361 & Mathieu Marchand 1894847
 const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
-
+volatile uint8_t couleur = ROUGE;
 
 enum Etat{ //énumétation de tous les états de la machine à état
 	RELACHE_DEPART_ROUGE,
@@ -30,25 +30,16 @@ volatile Etat etat = RELACHE_DEPART_ROUGE;
 volatile bool enTrainPeser = false;
 
 ISR(INT0_vect) {
-	// laisser un delai avant de confirmer la réponse du
-	// bouton-poussoir: environ 30 ms (anti-rebond)
-	//_delay_ms(30);
 	if(estClique()){
-		//enTrainPeser = true;
 		etatSuivant();
-		//PORTA = ROUGE;
-		//PORTA = VERT;
-		//etatSuivant();
-		}
-		
+		enTrainPeser = true;
+	}
+	if(!estClique() && enTrainPeser){
+		enTrainPeser = false;
+		etatSuivant();
+	}
 	
-	
-	//PORTA = ROUGE;
-	// se souvenir ici si le cf récédente
-	//'modifier ici'
-	// Voir la note plus bas pour comprendre cette instruction et son rôle
 	EIFR |= (1 << INTF0);
-	
 }
 
 
@@ -56,23 +47,16 @@ int main(){
 	
 	initialisation();
 	
-    while(true){
-		
+	while(true){
 	
-		//if(!estClique() && enTrainPeser){
-			//enTrainPeser = false;
-			//etatSuivant();
-			//} 
-
-        if(etat == PESE_AMBRE){
-            PORTA = ROUGE;
-            _delay_ms(1);
-            PORTA = VERT;
-            _delay_ms(1);
-            PORTA=ETEINT;
-        }
+    if(etat==PESE_AMBRE){
+		PORTA = ROUGE;
+		_delay_ms(10);
+		PORTA = VERT;
+		_delay_ms(10);
+		PORTA=ETEINT;
     }
-
+}
     return 0;
 }
 
@@ -101,10 +85,11 @@ void etatSuivant(){
 		case RELACHE_ETEINT:
 		     etat = PESE_VERT;
 		     PORTA = VERT;
-		       break;
+		    break;
 		case PESE_VERT:
 			etat = RELACHE_DEPART_ROUGE;
 			PORTA=ROUGE;
+			break;
 	}
 
 }
@@ -117,8 +102,13 @@ void initialisation() {
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
 	EIMSK |= (1 << INT0); //INT0 = interuption 0
-	EICRA |= (1<< ISC01); //external interupt control register A -- s'occupe des interruptions
-
+	
+	EICRA &= ~(1 << ISC01);//0 au bit 00000010
+	EICRA |= (1<< ISC00);//1 au bit 00000000
+	//total = XXXXXX01
+	
+	//EICRA |= (1<< ISC00);
+	
 	sei(); //peut reprendre les interuptions ici
 }
 
