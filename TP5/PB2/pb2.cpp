@@ -12,42 +12,54 @@ const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
 
+const uint8_t SECONDE = 8000; //une seconde correspond a 8000 cycle de CPU
+const uint8_t d_SECONDE = 800;//dixieme de seconde
+
 volatile uint8_t couleur;
 volatile bool minuterieExpiree=false;
 volatile bool boutonPoussoir=false;
 
+volatile long ds=0;
 void etatSuivant();
 void initialisation();
 bool estClique();
+void partirMinuterie(uint16_t duree);
 
 volatile bool enTrainPeser = false;
 
-void delais_dS(uint8_t temps_S);
-
 ISR(INT0_vect) {
-	boutonPoussoir=true;
 	
 	EIFR |= (1 << INTF0);
+	boutonPoussoir =true;
+	
 }
 
-ISR(){
-	minuterieExpiree=true;
+ISR(TIMER1_COMPA_vect){
+	ds++;
+	switch(ds){
+			case 100:
+				PORTA = ROUGE;
+				break;
+			case 101 :
+				PORTA = ETEINT;
+				break;
+			case 111 :
+				minuterieExpiree = true;
+	}
 }
 
 int main(){
 	
 	initialisation();
-	delais_dS(100);
-	PORTA = ROUGE;
-	delais_dS(1);
 	PORTA = ETEINT;
+	partirMinuterie(800);
 	
-	partirMinuterie();
 	
+//--------------
 	do {
 		// attendre qu'une des deux variables soit modifiée
 		// par une ou l'autre des interruptions.
-	} while (!minuterieExpiree && !boutonPoussoir);
+	} while(!minuterieExpiree && !boutonPoussoir);
 	// Une interruption s'est produite. Arrêter toute
 	// forme d'interruption. Une seule réponse suffit.
 	cli ();
@@ -64,31 +76,26 @@ int main(){
 }
 
 void partirMinuterie(uint16_t duree){
-	partirMinuterie = false;
+	minuterieExpiree = false;
+		
+	
 	//mode CTC du timer 1 avec horloge divisée par 1024
-
 	// interruption après la durée spécifiée
 
-	TCNT1 = 1 ;
+	TCNT1 = 0;//compteur (0 a OCR1A)
 
 	OCR1A = duree;
 
-	TCCR1A |= ( 1 << (CS12)));
-	TCCR1A |= ( 1 << (CS10)));
-	
+	//TCCR1A |= 
 
-	TCCR1B = 'modifier ici' ;
-
+	TCCR1B |= ( 1 << (WGM12));
+	TCCR1B |= ( 1 << (CS12));
+	TCCR1B |= ( 1 << (CS10));
 	TCCR1C = 0;
 	
-	TIMSK1 = 'modifier ici' ;
+	TIMSK1 |= ( 1 << (OCIE1A));
 }
 
-void delais_dS(uint8_t temps_dS){
-	for (int i = 0; i < temps_dS; i++){
-			_delay_ms(100);
-	}
-}
 
 void initialisation() {
 	cli(); //pas d'interuption
@@ -102,8 +109,6 @@ void initialisation() {
 	EICRA &= ~(1 << ISC01);//0 au bit 00000010
 	EICRA |= (1<< ISC00);//1 au bit 00000000
 	//total = XXXXXX01
-	
-	//EICRA |= (1<< ISC00);
 	
 	sei(); //peut reprendre les interuptions ici
 }
