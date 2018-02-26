@@ -28,10 +28,11 @@ void partirMinuterie(uint16_t duree);
 volatile bool enTrainPeser = false;
 
 ISR(INT0_vect) {
-	
-	EIFR |= (1 << INTF0);
+	if(estClique()){
 	boutonPoussoir =true;
-	
+	PORTA = ROUGE;
+	}
+	EIFR |= (1 << INTF0);
 }
 
 ISR(TIMER1_COMPA_vect){
@@ -55,19 +56,13 @@ int main(){
 	partirMinuterie(800);
 	
 	
-//--------------
 	do {
 		// attendre qu'une des deux variables soit modifiée
 		// par une ou l'autre des interruptions.
 	} while(!minuterieExpiree && !boutonPoussoir);
 	// Une interruption s'est produite. Arrêter toute
 	// forme d'interruption. Une seule réponse suffit.
-	cli ();
-	if(minuterieExpiree){
-			PORTA = ROUGE;
-	}else{
-			PORTA = VERT;
-	}
+
 
 	// Verifier la réponse
 
@@ -114,10 +109,10 @@ void initialisation() {
 }
 
 bool estClique(){
-	if(PIND & (1<<2)){
+	if(1(PIND & 0) ){
 		_delay_ms(10);
 		}
-	if(PIND & (1<<2)){
+	if(1(PIND & 0)){
 		return true;
 		}	
 		

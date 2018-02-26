@@ -11,92 +11,96 @@ AUTEURS: Ines Jussaume 1900361 & Mathieu Marchand 1894847
 const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
-volatile uint8_t couleur = ROUGE;
 
-enum Etat{ //énumétation de tous les états de la machine à état
-	RELACHE_DEPART_ROUGE,
-	PESE_AMBRE,
-	RELACHE_VERT,
-	PESE_ROUGE,
-	RELACHE_ETEINT,
-	PESE_VERT
-};
+const uint16_t SECONDE = 8000; //une seconde correspond a 8000 cycle de CPU
+const uint16_t d_SECONDE = 800;//dixieme de seconde
 
+volatile uint8_t couleur;
+volatile bool minuterieExpiree1=false,minuterieExpiree2=false;;
+volatile bool boutonPoussoir=false;
+
+volatile bool startMinutrie = false;
+
+volatile long compteur_ds=0;
 void etatSuivant();
 void initialisation();
 bool estClique();
+void partirMinuterie(uint16_t duree);
 
-volatile Etat etat = RELACHE_DEPART_ROUGE;
+
 volatile bool enTrainPeser = false;
 
 ISR(INT0_vect) {
-	if(estClique()){
-		etatSuivant();
-		enTrainPeser = true;
+	if(estClique())
+	{
+		boutonPoussoir=true;
 	}
-	if(!estClique() && enTrainPeser){
-		enTrainPeser = false;
-		etatSuivant();
+	else if(!estClique())
+	{
+		boutonPoussoir = false;
 	}
-	
 	EIFR |= (1 << INTF0);
 }
 
+ISR(TIMER1_COMPA_vect){
+	compteur_ds++;
+	if(compteur_ds==120){
+		minuterieExpiree1 = true;
+	}else if (compteur_ds ==125){
+		minuterieExpiree2 = true;
+	}
+}
 
 int main(){
 	
 	initialisation();
-	
-	while(true){
-	
-    if(etat==PESE_AMBRE){
-		PORTA = ROUGE;
-		_delay_ms(10);
-		PORTA = VERT;
-		_delay_ms(10);
-		PORTA=ETEINT;
-    }
-}
-    return 0;
+	do {
+		if(boutonPoussoir)
+		{
+			partirMinuterie(800);
+			boutonPoussoir = false;
+			do
+			{
+				PORTA=ROUGE;
+				PORTA = ETEINT;			
+			} while (!boutonPoussoir && !minuterieExpiree1);
+			
+			while(!minuterieExpiree2)
+			{
+				PORTA=VERT;
+				_delay_ms(30);
+				PORTA = ETEINT;
+			}
+			
+		}
+
+	} while(true);
+
+	return 0;
 }
 
-/********************************************************************************
- *  etatSuivant() prend en prarmètre l'état actuel et le modifie pour l'état suivant
- *  le switch détermine quel sera l'état suivant selon l'état actuel et allume ou étaint
- *  la del d'une certaine couleur
- ********************************************************************************/
-void etatSuivant(){
-	switch(etat){
-		case RELACHE_DEPART_ROUGE:
-			etat = PESE_AMBRE;
-			break;
-		case PESE_AMBRE:
-			etat = RELACHE_VERT;
-			PORTA = VERT;
-			break;
-		case RELACHE_VERT:
-			etat = PESE_ROUGE;
-			PORTA = ROUGE;
-			break;
-		case PESE_ROUGE:
-			etat = RELACHE_ETEINT;
-		    PORTA = ETEINT;
-			break;
-		case RELACHE_ETEINT:
-		     etat = PESE_VERT;
-		     PORTA = VERT;
-		    break;
-		case PESE_VERT:
-			etat = RELACHE_DEPART_ROUGE;
-			PORTA=ROUGE;
-			break;
-	}
+void partirMinuterie(uint16_t duree){	
+	
+	//mode CTC du timer 1 avec horloge divisée par 1024
+	// interruption après la durée spécifiée
 
+	TCNT1 = 0;//compteur (0 a OCR1A)
+
+	OCR1A = duree;
+
+	//TCCR1A |= 
+
+	TCCR1B |= ( 1 << (WGM12));
+	TCCR1B |= ( 1 << (CS12));
+	TCCR1B |= ( 1 << (CS10));
+	TCCR1C = 0;
+	
+	TIMSK1 |= ( 1 << (OCIE1A));
 }
+
 
 void initialisation() {
 	cli(); //pas d'interuption
-	PORTA = ROUGE;
 	DDRA = 0xff; //PORT A est en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
@@ -107,16 +111,14 @@ void initialisation() {
 	EICRA |= (1<< ISC00);//1 au bit 00000000
 	//total = XXXXXX01
 	
-	//EICRA |= (1<< ISC00);
-	
 	sei(); //peut reprendre les interuptions ici
 }
 
 bool estClique(){
-	if(PIND & (1<<2)){
+	if(~PIND & (1<<2)){
 		_delay_ms(10);
 		}
-	if(PIND & (1<<2)){
+	if(~PIND & (1<<2)){
 		return true;
 		}	
 		
