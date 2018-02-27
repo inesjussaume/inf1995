@@ -28,6 +28,7 @@ volatile long compteurTempsAppuye= 0;
 void initialisation();
 bool estClique();
 void partirMinuterie(uint16_t duree);
+void reset();
 
 
 volatile bool enTrainPeser = false;
@@ -37,7 +38,7 @@ ISR(INT0_vect) {
 	{
 		boutonPoussoirAppuye=true;
 	}
-	else if(!estClique() && boutonPoussoir)
+	else if(!estClique() && boutonPoussoirAppuye)
 	{
 		boutonPoussoirAppuye = false;
 	}
@@ -50,40 +51,41 @@ ISR(TIMER1_COMPA_vect){
 	if (compteur_ds == 120) {
 		minuterieExpiree1 = true;
 	}
-
-	switch (compteur_ds)
-	{
-	case 5: // 1/2 seconde apres avoir lache le bouton
-		minuterieExpiree2 = true;
-		break;
-	case 20: // 2 secondes plus tard
-		minuterieExpiree3 = true;
-		break;
-	case (20 + compteurTempsAppuye/2):
-		minuterieExpiree4 = true;
-		compteurTempsAppuye = (20 + compteurTempsAppuye / 2);
-		break;
-	case compteurTempsAppuye:
-		minuterieExpiree5 = false;
-		break;
-	default:
-		break;
+	
+	if(minuterieExpiree1){
+		
+		if(compteur_ds==5){
+			minuterieExpiree2 = true;
+			}
+		else if(compteur_ds==20){
+			minuterieExpiree3 = true;
+		}
+		else if (compteur_ds==20 + compteurTempsAppuye/2){
+			minuterieExpiree4 = true;
+			//compteurTempsAppuye = (20 + compteurTempsAppuye / 2);
+		}
+		else if(compteur_ds==30 + compteurTempsAppuye/2){
+			minuterieExpiree5 = true;
 	}
+}
 }
 
 int main(){
 	
 	initialisation();
-	do {
+	partirMinuterie(800);//compte une fois par dixième de seconde (10 fois par seconde)
+	do {	
 		if (boutonPoussoirAppuye)
 		{
-			partirMinuterie(800);//compte une fois par dixième de seconde (10 fois par seconde)
+			
+			
 			boutonPoussoirAppuye = true;
 			while (boutonPoussoirAppuye && !minuterieExpiree1)
 			{
 				PORTA = ROUGE;
 				PORTA = ETEINT;
 			}
+			minuterieExpiree1 = true;
 			compteurTempsAppuye = compteur_ds;
 			compteur_ds = 0;
 		}
@@ -118,6 +120,8 @@ int main(){
 			{
 
 			}
+			PORTA = ETEINT;
+			reset();
 			
 		}
 	
@@ -171,4 +175,15 @@ bool estClique(){
 		
 	return false;
 	}
+	
+void reset(){
+	minuterieExpiree1=false;
+	minuterieExpiree2=false;
+	minuterieExpiree3 = false; 
+	minuterieExpiree4 = false; 
+	minuterieExpiree5 = false;
+	boutonPoussoirAppuye = false;
+	compteur_ds=1;
+}
+
 
