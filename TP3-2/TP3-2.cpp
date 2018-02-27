@@ -100,7 +100,7 @@ void etatSuivant(Etat &etatActuel){
 		case PESE_VERT:
 			etatActuel = RELACHE_DEPART_ROUGE;
 			PORTA=ROUGE;
-	
+			break;
 	}
 
 }
