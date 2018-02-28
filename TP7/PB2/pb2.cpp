@@ -18,24 +18,35 @@ const uint8_t d_SECONDE = 800;//dixieme de seconde
 
 void initialisation();
 
+volatile bool enTrainPeser = false;
+
+ISR(INT0_vect) {
+	_delay_ms(30);
+	EIFR |= (1 << INTF0);
+	
+}
+
 int main(){
 	
 	initialisation();
-	PORTA = ROUGE;
+
 	return 0;
 }
 
 
 void initialisation() {
 	cli(); //pas d'interuption
+	PORTA = ROUGE;
 	DDRA = 0xff; //PORT A est en sortie
 	DDRB = 0xff; //PORT B en sortie
 	DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
 	EIMSK |= (1 << INT0); //INT0 = interuption 0
+	
 	EICRA &= ~(1 << ISC01);//0 au bit 00000010
 	EICRA |= (1<< ISC00);//1 au bit 00000000
 	//total = XXXXXX01
+	
 	sei(); //peut reprendre les interuptions ici
 }
 

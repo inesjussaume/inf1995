@@ -34,14 +34,8 @@ void reset();
 volatile bool enTrainPeser = false;
 
 ISR(INT0_vect) {
-	if(estClique())
-	{
-		boutonPoussoirAppuye=true;
-	}
-	else if(!estClique() && boutonPoussoirAppuye)
-	{
-		boutonPoussoirAppuye = false;
-	}
+	_delay_ms(30);
+	boutonPoussoirAppuye = !boutonPoussoirAppuye;
 	EIFR |= (1 << INTF0);
 }
 
@@ -71,14 +65,11 @@ ISR(TIMER1_COMPA_vect){
 }
 
 int main(){
-	
 	initialisation();
 	partirMinuterie(800);//compte une fois par dixième de seconde (10 fois par seconde)
 	do {	
 		if (boutonPoussoirAppuye)
 		{
-			
-			
 			boutonPoussoirAppuye = true;
 			while (boutonPoussoirAppuye && !minuterieExpiree1)
 			{
