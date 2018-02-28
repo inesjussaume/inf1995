@@ -96,18 +96,11 @@ int main(){
 			//clignote compteur fois ?
 			while (!minuterieExpiree4)//DEL rouge clignote 2 fois par seconde pour compteur/2
 			{
-				//if(compteur_ds%2 == 0)
-				
-				
-				
-				//a changer:
-				PORTA = ROUGE;
-				_delay_ms(30);
-				PORTA = ETEINT;
-				_delay_ms(100);
-				PORTA = ROUGE;
-				_delay_ms(30);
-				PORTA = ETEINT;
+				if(compteur_ds%5 == 0){
+					PORTA = ROUGE;
+					_delay_ms(30);
+					PORTA = ETEINT;
+				}
 			}
 
 			PORTA = VERT;
@@ -120,7 +113,7 @@ int main(){
 			
 		}
 	
-	} while(true);
+	
 
 	return 0;
 }
