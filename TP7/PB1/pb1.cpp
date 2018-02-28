@@ -16,7 +16,7 @@ const uint16_t SECONDE = 8000; //une seconde correspond a 8000 cycle de CPU
 const uint16_t d_SECONDE = 800;//dixieme de seconde
 //liste des minutries : 
 volatile bool minuterieExpiree1=false,
-minuterieExpiree2=false,
+minuterieExpiree2 = false,
 minuterieExpiree3 = false, 
 minuterieExpiree4 = false, 
 minuterieExpiree5 = false;
