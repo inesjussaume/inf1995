@@ -54,7 +54,7 @@ ISR(TIMER1_COMPA_vect){
 		else if(compteur_ds==20){
 			minuterieExpiree3 = true;
 		}
-		else if (compteur_ds==20 + compteurTempsAppuye/2){
+		else if (compteur_ds==(20 + compteurTempsAppuye/2)){
 			minuterieExpiree4 = true;
 			//compteurTempsAppuye = (20 + compteurTempsAppuye / 2);
 		}
@@ -70,7 +70,6 @@ int main(){
 	do {	
 		if (boutonPoussoirAppuye)
 		{
-			boutonPoussoirAppuye = true;
 			while (boutonPoussoirAppuye && !minuterieExpiree1)
 			{
 				PORTA = ROUGE;
@@ -94,9 +93,14 @@ int main(){
 			{
 			
 			}
-
+			//clignote compteur fois ?
 			while (!minuterieExpiree4)//DEL rouge clignote 2 fois par seconde pour compteur/2
 			{
+				//if(compteur_ds%2 == 0)
+				
+				
+				
+				//a changer:
 				PORTA = ROUGE;
 				_delay_ms(30);
 				PORTA = ETEINT;
