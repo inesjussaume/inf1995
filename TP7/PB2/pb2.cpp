@@ -34,24 +34,26 @@ int main(){
 	
 	initialisation();
     can conversion = can();
-    uint8_t intensiteLumiere = 0;
+    uint16_t intensiteLumiere = 0;
     
     while (true) {
         
         //prend la valeur retournée par la photorésiatance
-        intensiteLumiere = conversionLecture(conversion, PHOTORESISTANCE);
+        //intensiteLumiere = conversionLecture(conversion, PHOTORESISTANCE);
+        intensiteLumiere = conversion.lecture(0);
+        intensiteLumiere = intensiteLumiere >> 0x2;
         
         if (intensiteLumiere <= SEUIL_VERT) { //VERT
-            PORTA = VERT;
+            PORTB = VERT;
         }
         else if (intensiteLumiere > SEUIL_VERT && intensiteLumiere < SEUIL_ROUGE) { //AMBRE
-            PORTA = ROUGE;
+            PORTB = ROUGE;
             _delay_ms(10);
-            PORTA = VERT;
+            PORTB = VERT;
             _delay_ms(10);
         }
         else { //ROUGE
-            PORTA = ROUGE;
+            PORTB = ROUGE;
         }
     }
 
@@ -61,8 +63,8 @@ int main(){
 
 void initialisation() {
 	PORTA = ROUGE;
-	DDRA = 0xff; //PORT A est en sortie
-	//DDRB = 0xff; //PORT B en sortie
+	DDRA = 0x00; //PORT A est en entree
+	DDRB = 0xff; //PORT B en sortie
 	//DDRC = 0xff; //PORT C en sortie
 	DDRD = 0x00; //PORT D en entree
 }
