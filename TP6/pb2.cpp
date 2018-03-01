@@ -20,6 +20,7 @@ AUTEURS: Ines Jussaume 1900361 & Mathieu Marchand 1894847
 const uint8_t ETEINT = 0b00000000;
 const uint8_t VERT = 0b000000001;
 const uint8_t ROUGE = 0b00000010;
+const uint8_t PHOTORESISTANCE = OCF1B;
 
 //seuils d'intensite lumineuse pour lectures de la photoresistance
 const uint8_t SEUIL_VERT = 100;
@@ -91,6 +92,26 @@ uint8_t conversionLecture(can& signalCapteur, uint8_t position){
     return signalCapteur.lecture(position-1) >> 2;
 }
 
+/*
+
+FONCTIONS DONNEES AU LABORATOIRE PAR PHILIPPE CARPHIN
+
+void transmmit_UART(uint8_t byte)
+
+void transmmit_UART_str(uint8_t * str){
+    uint8_t c;
+    uint8_t *p = str;
+    while ((c=*p++)!='10'){
+		UART_transmit(c);
+    }
+}
+
+void transmmit_UART_number(uint16_t n){
+    uint8_t buff[100];
+    sprintf(buff, "number is %u\n");
+    transmmit_UART_str(buff);
+}
+*/
 
 
 
