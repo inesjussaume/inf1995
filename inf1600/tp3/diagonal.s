@@ -6,14 +6,14 @@ matrix_diagonal_asm:
     mov $-1,%esi    #r dans esi
        
 boucle1:
-    movl $0,%edi        
-    inc %esi  #++r   
-    cmp 16(%ebp),%esi 
-    je fin
+    movl $0,%edi            #remet c a 0
+    inc %esi                #++r   
+    cmp 16(%ebp),%esi       #compare matorder et r
+    je fin                  #si egale, jump fin
     
 boucle2:
    
-    cmp 16(%ebp),%edi         #c - mat  <= 0 alors jump boucle1
+    cmp 16(%ebp),%edi        #c - mat  <= 0 alors jump boucle1
     je boucle1
     
     mov 16(%ebp),%edx       #matorder dans %edx
@@ -26,10 +26,10 @@ boucle2:
     
     
 if:
-    cmp %esi,%edi
-    jne else
+    cmp %esi,%edi           #c == r
+    jne else                #si pas egale -> else 
     
-    pushl (%ecx,%eax,4)
+    pushl (%ecx,%eax,4)     #-4(%ebp) = inmatdata[c + r * matorder];
 
     jmp equals
    
@@ -39,12 +39,12 @@ fin:
     ret            /* Return to the caller */
 
 else:
-   push $0
+   push $0                  #-4(%ebp) = 0
 
 
 equals:
     
-    pop %ecx
+    pop %ecx                #-4(%ebp) correspond soit a 0 ou inmatdata[c + r * matorder] selon le cas
     movl %ecx,(%ebx,%eax,4)
     inc %edi
     jmp boucle2

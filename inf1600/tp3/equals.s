@@ -14,7 +14,7 @@ boucle1:
  
 boucle2:
    
-    cmp 16(%ebp),%edi             #c - mat  <= 0 alors jump boucle1
+    cmp 16(%ebp),%edi       #c - mat  <= 0 alors jump boucle1
     je boucle1
 
 equals:
@@ -36,9 +36,6 @@ equals:
     movl $0,%eax
  
 fin: 
-    #mov %esi,%eax
-    #mull %edi
-    #add $12,%eax
     leave          /* Restore ebp and esp */
     ret            /* Return to the caller */
 fin1 :
