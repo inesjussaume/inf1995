@@ -6,9 +6,10 @@ matrix_transpose_asm:
         
         /* Write your solution here */
         movl $-1,%esi   #esi = r
-        movl $0,%edi    #edi = c 
+        
         
 boucle1:
+    movl $0,%edi    #edi = c 
     inc %esi  #++r         #r dans ESI             
     cmp 16(%ebp),%esi      
     je fin                #r - mat <= 0 alors jump fin   
