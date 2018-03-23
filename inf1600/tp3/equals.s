@@ -1,23 +1,20 @@
 .globl matrix_equals_asm
 
 matrix_equals_asm:
-       push %ebp      /* Save old base pointer */
-        mov %esp, %ebp /* Set ebp to current esp */
-
-        
-        
-        mov $0,%esi        #r dans ESI
-        mov $-1,%edi 
+    push %ebp      /* Save old base pointer */
+    mov %esp, %ebp /* Set ebp to current esp */
+    mov $-1,%esi    #r dans esi
        
 boucle1:
-    inc %esi  #++r         #c dans EDI             
-    cmp $2,%esi      
-    je fin1                #r - mat <= 0 alors jump fin   
-    
+    movl $0,%edi            #c dans edi
+    inc %esi                #++r                      
+    cmp 16(%ebp),%esi      
+    je fin1                 #r - mat <= 0 alors jump fin   
+                            
  
 boucle2:
    
-    cmp $2,%edi         #c - mat  <= 0 alors jump boucle1
+    cmp 16(%ebp),%edi             #c - mat  <= 0 alors jump boucle1
     je boucle1
 
 equals:
@@ -28,7 +25,7 @@ equals:
     mull %edx               #eax = matorder * r 
     add %edi, %eax          #eax = matorder * r +c
     
-    pushl (%ecx,%eax,4)   #-4(%ebp) = inmatdata1[c + r * matorder]
+    pushl (%ecx,%eax,4)     #-4(%ebp) = inmatdata1[c + r * matorder]
     pushl (%ebx,%eax,4)     #-8(ebp) = inmatdata2[c + r * matorder]
     pop %eax
     pop %edx
