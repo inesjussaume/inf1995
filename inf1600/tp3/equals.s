@@ -3,6 +3,7 @@
 matrix_equals_asm:
     push %ebp      /* Save old base pointer */
     mov %esp, %ebp /* Set ebp to current esp */
+    pusha
     mov $-1,%esi    #r dans esi
        
 boucle1:
@@ -36,6 +37,7 @@ equals:
     movl $0,%eax            #si pas egale, 0 dans eax et on sort de la fonctionne (return 0;)
  
 fin: 
+    popa
     leave          /* Restore ebp and esp */
     ret            /* Return to the caller */
 fin1 :

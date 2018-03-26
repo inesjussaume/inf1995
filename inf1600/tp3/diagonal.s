@@ -3,6 +3,7 @@
 matrix_diagonal_asm:
     push %ebp      			/* Save old base pointer */
     mov %esp, %ebp 			/* Set ebp to current esp */
+    pusha
     mov $-1,%esi    #r dans esi
        
 boucle1:
@@ -35,6 +36,7 @@ if:
    
 
 fin:
+    popa
     leave          /* Restore ebp and esp */
     ret            /* Return to the caller */
 
