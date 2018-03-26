@@ -28,7 +28,7 @@ for2:                                   # c plus petit que matorder
 # 	elem += inmatdata[c + r * matorder]
 
     cmp -8(%ebp), %edi                  # comparaison de c et de matorder 
-    je outmatdata[r]                      		# jump to endFor2 if c = matorder
+    je outmatdataR                      		# jump to endFor2 if c = matorder
 
     # elem += inmatdata[c + r * matorder]
     movl 8(%ebp), %ecx					# inmatdata dans %ecx
@@ -42,7 +42,7 @@ for2:                                   # c plus petit que matorder
     incl -8(%ebp)                       # c est incrémenté
     jmp for2                            # retour au début de la boucle
 
-outmatdata[r]:
+outmatdataR:
 
     # outmatdata[r] = elem/matorder
     movl -12(%ebp), %eax                # elem dans le registre %eax
