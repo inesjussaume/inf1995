@@ -15,7 +15,7 @@ boucle1:
  
 boucle2:
    
-    cmp 16(%ebp),%edi         #c - mat  <= 0 alors jump boucle1
+    cmp 16(%ebp),%edi       #c - mat  <= 0 alors jump boucle1
     je boucle1
 
 equals:
