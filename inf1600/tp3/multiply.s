@@ -1,22 +1,4 @@
 
-
-#void matrix_multiply(const int* inmatdata1, const int* inmatdata2, int* outmatdata, int matorder) {
-#   /* Variables */
-#   int r, c; /* Row/column indices */
-#   int i;    /* Index for element calculation */
-#   int elem; /* Buffer for element calculation */
-#   /* Perform row x column multiplication */
-#   for(r = 0; r < matorder; ++r) {
-#      for(c = 0; c < matorder; ++c) {
-#         elem = 0;
-#         for(i = 0; i < matorder; ++i)
-#            elem += inmatdata1[i + r * matorder] * inmatdata2[c + i * matorder];
-#         outmatdata[c + r * matorder] = elem;
-#      }
-#   }
-#}
-
-
 .globl matrix_multiply_asm
 
 matrix_multiply_asm:
@@ -30,14 +12,14 @@ matrix_multiply_asm:
 	movl $0, -12(%ebp)			# i = 0
 		
 for1:
-#   for(r = 0; r < matorder; ++r)
+# for(r = 0; r < matorder; ++r)
 
 	cmp -4(%ebp), %ebx			# condition du for (matorder - r)
 	je end						# jump to end if matorder = r
 	
 for2:
-#      for(c = 0; c < matorder; ++c)
-#         elem = 0;
+# for(c = 0; c < matorder; ++c)
+# 	elem = 0;
 
 	cmp -8(%ebp), %ebx					# condition du for (matorder - c)
 	movl $0, -16(%ebp)					# elem = 0
@@ -47,7 +29,7 @@ for2:
 	jmp for1							# retour au début du for1
 	
 for3:
-#         for(i = 0; i < matorder; ++i)
+# for(i = 0; i < matorder; ++i)
 
 	cmp -12(%ebp), %ebx					# condition du for (matorder - i)
 	jne multiplierMatrice 				# jump to multiplierMatrice if matorder is NOT equal to i
@@ -56,8 +38,8 @@ for3:
 	jmp for2							# retour au début du for2
 	
 multiplierMatrice:
-#            elem += inmatdata1[i + r * matorder] * inmatdata2[c + i * matorder];
-#         outmatdata[c + r * matorder] = elem;
+# 	elem += inmatdata1[i + r * matorder] * inmatdata2[c + i * matorder];
+# outmatdata[c + r * matorder] = elem;
 
 	# inmatdata1[i + r * matorder]
 	movl -4(%ebp), %eax					# on met r dans eax pour faciliter les manipulations
@@ -91,5 +73,6 @@ multiplierMatrice:
  
 end:
 	addl $16, (%esp) 			# free memory space used 
+	
 	leave          				/* restore ebp and esp */
 	ret            				/* return to the caller */
