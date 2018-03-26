@@ -45,6 +45,6 @@ else:
 equals:
     
     pop %ecx                #-4(%ebp) correspond soit a 0 ou inmatdata[c + r * matorder] selon le cas
-    movl %ecx,(%ebx,%eax,4)
+    movl %ecx,(%ebx,%eax,4) #
     inc %edi
     jmp boucle2
