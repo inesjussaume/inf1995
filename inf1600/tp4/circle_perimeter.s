@@ -10,5 +10,11 @@ _ZNK7CCircle12PerimeterAsmEv:
 
         /* Write your solution here */
         
-        leave          /* restore ebp and esp */
-        ret            /* return to the caller */
+        flds factor			#factor sur la pile
+        fldpi				#pi sur la pile
+        fmulp				#st[0] = st[1] = pi x 2.00
+        mov 8(%ebp),%eax	#Objet cercle dans %eax
+        fld 4(%eax)			#attributs de Cercle sur la pile
+        fmulp				#st[0] = st[1] = pi x 2.00 x mRadius
+        leave         		/* restore ebp and esp */
+        ret            		/* return to the caller */
