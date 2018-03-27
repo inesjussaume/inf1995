@@ -13,7 +13,7 @@
 _ZNK9CTriangle9HeightAsmEv:
         push %ebp               /* save old base pointer */
         mov %esp, %ebp          /* set ebp to current esp */
-        
+        /*
         mov 8(%ebp), %eax       # objet triangle dans %eax
         mov 0(%eax), %ecx       # VTable dans %ecx pour pouvoir faire l'appel de fonction
         
@@ -27,6 +27,6 @@ _ZNK9CTriangle9HeightAsmEv:
         fdivrp                  # division st[0] = st[1]  / st[0]
                                 #          st[0] = 2.0f*a / mSides[2]
         
-        
+      */
         leave                   /* restore ebp and esp */
         ret                     /* return to the caller */

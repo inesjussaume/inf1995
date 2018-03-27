@@ -3,7 +3,7 @@
 _ZNK7CCircle7AreaAsmEv:
         push %ebp               /* save old base pointer */
         mov %esp, %ebp          /* set ebp to current esp */
-        
+        /**/
         sub $4, %esp            # ajoute espace pour utiliser rayon
         
         fldpi                   # pi est sur la pile
