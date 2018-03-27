@@ -8,8 +8,8 @@ matrix_row_aver_asm:
     subl $8, %esp                       # allocation de l'espace mémoire pour les variables locale
     pusha
   	
-    movl $0, %esi                       # r = 0 dans %esi
-    movl $0, %edi                       # c = 0 dans %edi
+    xorl %esi, %esi                     # r = 0 dans %esi
+    xorl %edi, %edi                     # c = 0 dans %edi
 
 
 
@@ -20,7 +20,7 @@ for1:                                   # r plus petit que matorder
     cmp %esi, 16(%ebp)                  # comparaison de matorder et r
     movl $0, -4(%ebp)					# elem = 0
 	jle end                           	# jump to end if r = matorder
-    movl $0, %edi                       # c remis à 0
+    xorl %edi, %edi                       # c remis à 0
 
 
 for2:                                   # c plus petit que matorder
@@ -35,8 +35,8 @@ for2:                                   # c plus petit que matorder
     movl %esi, %eax                     # r est mis dans %eax
     mull 16(%ebp)                       # multiplication de r et de matorder
     addl %edi, %eax                     # c + r * matorder
-    movl 8(%ebp), %ebx					# inmatdata dans %ebx                            ####
-    movl (%ebx,%eax,4), %eax            # inmatdata[ c + r * matorder ]
+    movl 8(%ebp), %ecx					# inmatdata dans %ecx                               #####
+    movl (%ecx,%eax,4), %eax            # inmatdata[ c + r * matorder ]
     addl %eax, -4(%ebp)                 # elem += inmatdata[ c + r * matorder ]
 
     incl %edi                           # c est incrémenté
@@ -47,10 +47,10 @@ outmatdataR:
     # outmatdata[r] = elem/matorder
     movl -4(%ebp), %eax                 # elem dans le registre %eax (utilise pour la multiplication)
     divl 16(%ebp)                       # division (%eax = elem/matorder)
-    movl 12(%ebp), %ecx					# outmatdata dans %ecx                             #####
-    movl %eax, (%ecx,%esi,4)            # outmatdata[r] = elem/matorder;
+    movl 12(%ebp), %ebx					# outmatdata dans %ebx                              #####
+    movl %eax, (%ebx,%esi,4)            # outmatdata[r] = elem/matorder;
 
-    movl $0, %edi                       # c remis à 0
+    xorl %edi, %edi                       # c remis à 0
     incl %esi                           # r est incrémenté
     jmp for1                            # jmp au debut du for1
 

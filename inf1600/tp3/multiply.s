@@ -7,9 +7,9 @@ matrix_multiply_asm:
         
     subl $8, %esp				    #make room for variables (i, elem)
     pusha
-    ###                             # matorder =  20(%ebp)
-    movl $0, %edi			        # r = 0 --> edi
-    movl $0, %esi			        # c = 0 --> esi
+    ###                            # matorder =  20(%ebp)
+    xorl %edi, %edi			        # r = 0 --> edi
+    xorl %esi, %esi			        # c = 0 --> esi
 	movl $0, -4(%ebp)			    # i = 0 --> -4(%ebp)
 	###                             # elem --> -8(%ebp)
 	
@@ -33,7 +33,7 @@ for2:
 	
 for3:
 # for(i = 0; i < matorder; ++i)
-
+    movl 20(%ebp), %ebx             # matorder dans %ebx
 	cmp -4(%ebp), %ebx				# condition du for (matorder - i)
 	jne multiplierMatrice 			# jump to multiplierMatrice if matorder is NOT equal to i
 	movl $0, -4(%ebp)				# réinitialisation de i (i=0)
